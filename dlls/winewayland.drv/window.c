@@ -534,11 +534,14 @@ void WAYLAND_WindowPosChanged(HWND hwnd, HWND insert_after, HWND owner_hint, UIN
     data->resizeable = swp_flags & WINE_SWP_RESIZABLE;
     data->managed = managed;
 
-    if (!surface && data->wayland_surface)
+    if (!surface)
     {
-        wayland_surface_reparent_popups(data->wayland_surface);
-        wayland_surface_destroy(data->wayland_surface);
-        data->wayland_surface = NULL;
+        if (data->wayland_surface)
+        {
+            wayland_surface_reparent_popups(data->wayland_surface);
+            wayland_surface_destroy(data->wayland_surface);
+            data->wayland_surface = NULL;
+        }
     }
     else if (wayland_win_data_create_wayland_surface(data, owner_surface))
     {
